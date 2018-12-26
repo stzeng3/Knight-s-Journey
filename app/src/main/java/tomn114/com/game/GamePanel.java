@@ -1,6 +1,9 @@
 package tomn114.com.game;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -8,6 +11,9 @@ import android.view.SurfaceView;
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     private MainThread thread;
+    private Bitmap bg;
+    public static final int WIDTH = 480;
+    public static final int HEIGHT = 800;
 
     public GamePanel(Context context){
         super(context);
@@ -25,9 +31,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
+
         thread.setRunning(true);
         thread.start();
-
     }
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -51,6 +58,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public void update(){
+
+    }
+
+    @Override
+    public void draw(Canvas canvas){
+        super.draw(canvas);
+
+        final float scaleX = getWidth() / WIDTH;
+        final float scaleY = getHeight() / HEIGHT;
+
+        if(canvas != null) {
+            final int savedState = canvas.save();
+            canvas.scale(scaleX, scaleY);
+            canvas.drawBitmap(bg, 0, 0, null);
+            canvas.restoreToCount(savedState);
+        }
 
     }
 }

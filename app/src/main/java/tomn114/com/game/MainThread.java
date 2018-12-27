@@ -11,7 +11,7 @@ public class MainThread extends Thread{
     private static Canvas canvas;
     private static final int MAX_FPS = 30;
     private static final int MAX_FRAME_SKIPS = 5;
-    private double averageFPS;
+    //private double averageFPS;
 
     public MainThread(SurfaceHolder sh, GamePanel gp){
         super();
@@ -75,12 +75,13 @@ public class MainThread extends Thread{
             frames++;
 
             //Measures the fps
+            /*
             if(frames == MAX_FPS){
                 averageFPS = 1000/(totalTime/frames);
                 frames = 0;
                 totalTime = 0;
-                System.out.println(averageFPS);
-            }
+                //System.out.println(averageFPS);
+            }*/
         }
     }
 

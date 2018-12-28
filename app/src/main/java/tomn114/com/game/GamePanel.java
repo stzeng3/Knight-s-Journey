@@ -11,9 +11,6 @@ import android.view.SurfaceView;
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     private MainThread thread;
-    public static final int WIDTH = 480;
-    public static final int HEIGHT = 800;
-
     private boolean[][] board;
 
     private int barrierCounter, counter = 0, runCounter = 0; // How many times makeIt() runs
@@ -24,9 +21,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private int minMoves;
     private int moves;
     private int currX, currY;
-    private int size = 5; // Length/width of board
+    private int boardLength = 5; //
+    private int boardWidth = 5;
     private int temp; // Wtf is this for
     private int tileSize;
+    private Knight knight;
+    private boolean won = false;
 
     private Bitmap tile, river, castle;
 
@@ -35,25 +35,25 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         //Intercept Events
         getHolder().addCallback(this);
-
-        thread = new MainThread(getHolder(), this);
-
         //Focusable to handle events
         setFocusable(true);
 
     }
 
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        tileSize = getWidth() / 5 / 2;
+        tileSize = getWidth()/5;
 
-        board = new boolean[size][size];
+        board = new boolean[boardLength][boardWidth];
+        BoardUtilities.createRects(boardLength, boardWidth, tileSize);
         tile = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tile), tileSize, tileSize, false);
-        river = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.river), tileSize, tileSize, false);
+        river = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.river2), tileSize, tileSize, false);
         castle = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.castle), tileSize, tileSize, false);
         makeIt();
 
+        knight = new Knight(startX, startY, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.right), tileSize, tileSize, false));
+
+        thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
     }
@@ -68,14 +68,39 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             try{
                 thread.setRunning(false);
                 thread.join();
+                retry = false;
+                thread = null;
             }catch(InterruptedException e){ e.printStackTrace(); }
-            retry = false;
+
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        return false;
+
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            return true;
+        }
+
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+
+            int[] rowColClicked = BoardUtilities.whichTileClicked(x, y);
+
+            if(rowColClicked == null){
+                System.out.println("Clicked outside board");
+            }
+            else if(board[rowColClicked[0]][rowColClicked[1]] == false){
+                System.out.println("Clicked river");
+            }
+            else {
+                knight.move(rowColClicked[0], rowColClicked[1]);
+                checkWin();
+            }
+            return true;
+        }
+        return super.onTouchEvent(event);
     }
 
     public void update(){
@@ -86,15 +111,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     public void draw(Canvas canvas){
         super.draw(canvas);
 
-        final float scaleX = getWidth() / WIDTH;
-        final float scaleY = getHeight() / HEIGHT;
-
         if(canvas != null) {
-            final int savedState = canvas.save();
-            canvas.scale(scaleX, scaleY);
             //Draw stuff here
             drawBoard(canvas);
-            canvas.restoreToCount(savedState);
+            knight.draw(canvas);
         }
     }
 
@@ -102,8 +122,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         int x = 0;
         int y = 0;
 
-        for(int i = 0; i<board.length; i++){
-            for(int j = 0; j<board.length; j++){
+        for(int i = 0; i<boardLength; i++){
+            for(int j = 0; j<boardWidth; j++){
                 if(board[i][j])
                     canvas.drawBitmap(tile, x, y, null);
                 else
@@ -123,14 +143,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     public void makeIt(){
         runCounter++;
         //Generates random start and end points
-        startX = (int)(Math.random()*2)+size-2;
+        startX = (int)(Math.random()*2)+boardWidth-2;
         startY = (int)(Math.random()*2);
         endX = (int)(Math.random()*2);
-        endY = (int)(Math.random()*2)+size-2;
+        endY = (int)(Math.random()*2)+boardLength-2;
         barrierCounter = barrierNum;
         //generates random barriers
-        for(int i=0;i<size;i++){
-            for(int j=0;j<size;j++){
+        for(int i=0; i < boardLength; i++){
+            for(int j=0; j < boardWidth; j++){
                 temp = (int)(Math.random()*3);
                 if(temp==0 && barrierCounter!=0){
                     board[i][j] = false;
@@ -148,13 +168,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         board[startX][startY] = true;
         board[endX][endY] = true;
-        minMoves = BoardUtilities.checkBoard(board,startX, startY, endX, endY,size);
+        minMoves = BoardUtilities.checkBoard(board,startX, startY, endX, endY, boardLength, boardWidth);
 
         //If the board is not possible to complete it will re-call the method
-        if(minMoves==size*size || minMoves<=difficulty)makeIt();
+        if(minMoves==boardLength*boardWidth || minMoves<=difficulty)makeIt();
         else{
             difficulty++;
             counter++;
+        }
+    }
+
+    public void checkWin(){
+        if(knight.getRow() == endX && knight.getCol() == endY){
+            won = true;
         }
     }
 }

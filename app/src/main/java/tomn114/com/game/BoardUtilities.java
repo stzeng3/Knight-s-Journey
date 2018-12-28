@@ -2,60 +2,57 @@ package tomn114.com.game;
 
 /* Yoinked from the original Knight's Journey source and changed to a static utility class */
 
+
+import android.graphics.Rect;
+
 public class BoardUtilities {
 
     static boolean[][] visited, board;
-    static int startX,startY;
-    static int finalX,finalY;
-    static int size; //Board length or width
+    static Rect[][] rects;
+    static int endX, endY;
+    static int length;
+    static int width;
     static int temp;
     static int solutions;
     static int minRequiredMoves;
 
-    //Coordinator will pass in a potential board, will check if the (finalX,finalY) can be reached
+    //Coordinator will pass in a potential board, will check if the (endX,endY) can be reached
     //Returns the minimum moves
-    public static int checkBoard(boolean[][] board, int startX, int startY, int finalX, int finalY, int size){
+    public static int checkBoard(boolean[][] board, int startX, int startY, int endX, int endY, int length, int width){
         BoardUtilities.board = board;
-        BoardUtilities.startX = startX;
-        BoardUtilities.startY = startY;
-        BoardUtilities.finalX = finalX;
-        BoardUtilities.finalY = finalY;
-
-        BoardUtilities.size = size;
+        BoardUtilities.endX = endX;
+        BoardUtilities.endY = endY;
+        BoardUtilities.length = length;
+        BoardUtilities.width = width;
 
         solutions = 0;
-        visited = new boolean[size][size];
-        minRequiredMoves = size * size;
+        visited = new boolean[length][width];
+        minRequiredMoves = length * width;
         findPossible(startX, startY);
         return minRequiredMoves;
     }
 
-    //Returns the number of solutions
-    public static int numOfSolutions(){
-        return solutions;
-    }
-
     //Checks if board is playable(player can reach the end point) using floodfill recursion. Also finds the minimum number of moves.
-    public static void findPossible(int x,int y){
+    public static void findPossible(int x, int y){
         //if the end position is reached, then update minRequiredMoves
-        if(x == finalX && y == finalY){
+        if(x == endX && y == endY){
             if(temp<=minRequiredMoves){
                 minRequiredMoves = temp;
                 solutions++;
             }
             return;
         }
-        // Checks if any of the eight possible "knight" moves are possible, then executes them in an attempt to reach (finalX,finalY)
+        // Checks if any of the eight possible "knight" moves are possible, then executes them in an attempt to reach (endX,endY)
         else{
             // The two moves in which the knight moves to the right
-            if(x+2<size && y+1<size && !visited[x+2][y+1] && board[x+2][y+1]){
+            if(x+2<width && y+1<length && !visited[x+2][y+1] && board[x+2][y+1]){
                 visited[x+2][y+1] = true;
                 temp++;
                 findPossible(x+2,y+1);
                 temp--;
                 visited[x+2][y+1] = false;
             }
-            if(x+2<size && y-1>=0 && !visited[x+2][y-1] && board[x+2][y-1]){
+            if(x+2<width && y-1>=0 && !visited[x+2][y-1] && board[x+2][y-1]){
                 visited[x+2][y-1] = true;
                 temp++;
                 findPossible(x+2,y-1);
@@ -64,14 +61,14 @@ public class BoardUtilities {
             }
 
             // The two moves in which the knight moves upwards
-            if(x+1<size && y+2<size && !visited[x+1][y+2] && board[x+1][y+2]){
+            if(x+1<width && y+2<length && !visited[x+1][y+2] && board[x+1][y+2]){
                 visited[x+1][y+2] = true;
                 temp++;
                 findPossible(x+1,y+2);
                 temp--;
                 visited[x+1][y+2] = false;
             }
-            if(x-1>=0 && y+2<size && !visited[x-1][y+2] && board[x-1][y+2]){
+            if(x-1>=0 && y+2<length && !visited[x-1][y+2] && board[x-1][y+2]){
                 visited[x-1][y+2] = true;
                 temp++;
                 findPossible(x-1,y+2);
@@ -80,7 +77,7 @@ public class BoardUtilities {
             }
 
             // The two moves in which the knight moves to the left
-            if(x-2>=0 && y+1<size && !visited[x-2][y+1] && board[x-2][y+1]){
+            if(x-2>=0 && y+1<length && !visited[x-2][y+1] && board[x-2][y+1]){
                 visited[x-2][y+1] = true;
                 temp++;
                 findPossible(x-2,y+1);
@@ -96,7 +93,7 @@ public class BoardUtilities {
             }
 
             // The two moves in which the knight moves downwards
-            if(x+1<size && y-2>=0 && !visited[x+1][y-2] && board[x+1][y-2]){
+            if(x+1<width && y-2>=0 && !visited[x+1][y-2] && board[x+1][y-2]){
                 visited[x+1][y-2] = true;
                 temp++;
                 findPossible(x+1,y-2);
@@ -111,5 +108,34 @@ public class BoardUtilities {
                 visited[x-1][y-2] = false;
             }
         }
+    }
+
+    //Create rects method
+    public static void createRects(int length, int width, int rectSize){
+        rects = new Rect[length][width];
+
+        int x = 0;
+        int y = 0;
+
+        for(int i = 0; i<length; i++){
+            for(int j = 0; j<width; j++){
+                rects[i][j] = new Rect(x, y, x + rectSize, y + rectSize);
+                x += rectSize;
+            }
+            y += rectSize;
+            x = 0;
+        }
+    }
+
+    public static int[] whichTileClicked(int touchX, int touchY){
+        for(int i = 0; i < length; i++){
+            for(int j = 0; j < width; j++){
+                if(rects[i][j].contains(touchX, touchY)) {
+                    System.out.println(i + ", " + j);
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return null;
     }
 }

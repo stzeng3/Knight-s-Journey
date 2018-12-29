@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -21,12 +23,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private int minMoves;
     private int moves;
     private int currX, currY;
-    private int boardLength = 5; //
+    private int boardLength = 5;
     private int boardWidth = 5;
-    private int temp; // Wtf is this for
-    private int tileSize;
+    private int temp;
     private Knight knight;
-    private boolean won = false;
+    private boolean doneWithLevel = false;
+    private Paint white, black;
+    private BlinkingText nextLevel, youWon;
+    public static final int NUM_OF_LEVELS = 8;
+
+    public static int tileSize;
+    public static int boardOffset;
 
     private Bitmap tile, river, castle;
 
@@ -42,13 +49,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        tileSize = getWidth()/5;
+        tileSize = getWidth()/boardWidth;
+        boardOffset = (getHeight() - tileSize*boardLength) / 2;
+
+        white = new Paint();
+        white.setColor(Color.WHITE);
+
+        black = new Paint();
+        black.setColor(Color.BLACK);
 
         board = new boolean[boardLength][boardWidth];
-        BoardUtilities.createRects(boardLength, boardWidth, tileSize);
+        BoardUtilities.createRects(boardLength, boardWidth);
         tile = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tile), tileSize, tileSize, false);
         river = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.river2), tileSize, tileSize, false);
         castle = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.castle), tileSize, tileSize, false);
+        nextLevel = new BlinkingText("Next Level", getWidth() / 4, getHeight() - boardOffset/2, black);
+        youWon = new BlinkingText("You Won!", getWidth() / 4, getHeight() - boardOffset/2, black);
         makeIt();
 
         knight = new Knight(startX, startY, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.right), tileSize, tileSize, false));
@@ -57,10 +73,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         thread.setRunning(true);
         thread.start();
     }
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
-    }
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
+
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
@@ -86,17 +102,26 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             int x = (int) event.getX();
             int y = (int) event.getY();
 
-            int[] rowColClicked = BoardUtilities.whichTileClicked(x, y);
+            if(!doneWithLevel) {
+                int[] rowColClicked = BoardUtilities.whichTileClicked(x, y);
 
-            if(rowColClicked == null){
-                System.out.println("Clicked outside board");
-            }
-            else if(board[rowColClicked[0]][rowColClicked[1]] == false){
-                System.out.println("Clicked river");
+                if (rowColClicked == null) {
+                    System.out.println("Clicked outside board");
+                }
+                else if (board[rowColClicked[0]][rowColClicked[1]] == false) {
+                    System.out.println("Clicked river");
+                }
+                else if (board[rowColClicked[0]][rowColClicked[1]]) {
+                    knight.move(rowColClicked[0], rowColClicked[1]);
+                    checkWin();
+                }
             }
             else {
-                knight.move(rowColClicked[0], rowColClicked[1]);
-                checkWin();
+                if(nextLevel.clicked(x, y)){
+                    //New level
+                    resetLevel();
+                }
+
             }
             return true;
         }
@@ -113,14 +138,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         if(canvas != null) {
             //Draw stuff here
+            canvas.drawRect(0, 0, getWidth(), getHeight(), white);
+            canvas.drawText("Level: " + counter, 50, 50, black);
             drawBoard(canvas);
             knight.draw(canvas);
+            nextLevel.draw(canvas);
+            youWon.draw(canvas);
         }
     }
 
     public void drawBoard(Canvas canvas){
         int x = 0;
-        int y = 0;
+        int y = boardOffset;
 
         for(int i = 0; i<boardLength; i++){
             for(int j = 0; j<boardWidth; j++){
@@ -129,7 +158,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 else
                     canvas.drawBitmap(river, x, y, null);
 
-                if(i == endX && j == endY)
+                if(i == endX && j == endY && !doneWithLevel)
                     canvas.drawBitmap(castle, x, y, null);
 
                 x += tileSize;
@@ -180,7 +209,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public void checkWin(){
         if(knight.getRow() == endX && knight.getCol() == endY){
-            won = true;
+            doneWithLevel = true;
+            if(counter == NUM_OF_LEVELS)
+                youWon.setVisible(true);
+            else
+                nextLevel.setVisible(true);
         }
+    }
+
+    public void resetLevel(){
+        barrierNum = 17;
+        nextLevel.setVisible(false);
+        doneWithLevel = false;
+        makeIt();
+        knight.setRow(startX);
+        knight.setCol(startY);
     }
 }

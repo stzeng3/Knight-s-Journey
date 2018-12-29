@@ -111,18 +111,18 @@ public class BoardUtilities {
     }
 
     //Create rects method
-    public static void createRects(int length, int width, int rectSize){
+    public static void createRects(int length, int width){
         rects = new Rect[length][width];
 
         int x = 0;
-        int y = 0;
+        int y = GamePanel.boardOffset;
 
         for(int i = 0; i<length; i++){
             for(int j = 0; j<width; j++){
-                rects[i][j] = new Rect(x, y, x + rectSize, y + rectSize);
-                x += rectSize;
+                rects[i][j] = new Rect(x, y, x + GamePanel.tileSize, y + GamePanel.tileSize);
+                x += GamePanel.tileSize;
             }
-            y += rectSize;
+            y += GamePanel.tileSize;
             x = 0;
         }
     }

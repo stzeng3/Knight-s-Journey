@@ -16,6 +16,8 @@ public class Knight {
 
     public int getRow(){ return row; }
     public int getCol(){ return col; }
+    public void setRow(int row){ this.row = row; }
+    public void setCol(int col){ this.col = col; }
 
     public void update(){
         //Animation
@@ -42,6 +44,6 @@ public class Knight {
     }
 
     public void draw(Canvas canvas){
-        canvas.drawBitmap(knightImg,col*knightImg.getWidth(), row*knightImg.getHeight(), null);
+        canvas.drawBitmap(knightImg,col*knightImg.getWidth(), GamePanel.boardOffset + row*knightImg.getHeight(), null);
     }
 }

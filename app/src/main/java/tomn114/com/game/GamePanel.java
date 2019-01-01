@@ -1,6 +1,7 @@
 package tomn114.com.game;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,21 +11,19 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.ArrayList;
-
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     private MainThread thread;
     private boolean[][] board;
     private boolean[][][] allBoards;
 
-    private int barrierCounter, counter = 0, runCounter = 0, lvlCounter=0; // How many times makeIt() runs
+    private int barrierCounter, counter = 0, runCounter = 0, lvlCounter=0, moveCounter=0, time=0;
     private int barrierNum = 15;
     private int difficulty = 2;
     private int startX, startY;
     private int endX, endY;
     private int minMoves;
-    private int moves;
+    private int totalMinMoves;
     private int currX, currY;
     private int boardLength = 5;
     private int boardWidth = 5;
@@ -33,10 +32,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private boolean doneWithLevel = false;
     private Paint white, black;
     private BlinkingText nextLevel, youWon;
-    public static final int NUM_OF_LEVELS = 8;
+    public static final int NUM_OF_LEVELS = 1;
     public static int tileSize;
     public static int boardOffset;
-
+    public Canvas c;
     private Bitmap tile, river, castle;
 
     public GamePanel(Context context){
@@ -51,6 +50,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        //Todo Start Loading Activity
         tileSize = getWidth()/boardWidth;
         boardOffset = (getHeight() - tileSize*boardLength) / 2;
 
@@ -119,15 +119,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                 }
                 else if (board[rowColClicked[0]][rowColClicked[1]]) {
                     knight.move(rowColClicked[0], rowColClicked[1]);
+                    moveCounter++;
                     checkWin();
                 }
             }
             else {
+                if(youWon.clicked(x,y)){
+                    /*
+                    Todo:Properly change to Results Activity
+                    getHolder().unlockCanvasAndPost(c);
+                    Intent intent = new Intent();
+                    intent.setClass(this.getContext(), ResultsActivity.class);
+                    this.getContext().startActivity(intent);
+                    */
+                }
                 if(nextLevel.clicked(x, y)){
                     //New level
                     resetLevel();
                 }
-
             }
             return true;
         }
@@ -144,8 +153,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         if(canvas != null) {
             //Draw stuff here
+            c = canvas;
             canvas.drawRect(0, 0, getWidth(), getHeight(), white);
-            canvas.drawText("Level: " + lvlCounter, 50, 50, black);
+            if(lvlCounter<NUM_OF_LEVELS) canvas.drawText("Level: " + (lvlCounter+1), getWidth()*1/6, boardOffset/2, black);
+            else canvas.drawText("Level: " + (lvlCounter), getWidth()*1/6, boardOffset/2, black);
+            canvas.drawText("Moves: " + (moveCounter), getWidth()*4/6, boardOffset/2, black);
+            //Todo: add timer
             drawBoard(canvas);
             knight.draw(canvas);
             nextLevel.draw(canvas);
@@ -211,16 +224,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             barrierNum = 15;
             difficulty++;
             counter++;
+            totalMinMoves+=minMoves;
         }
     }
 
     public void checkWin(){
         if(knight.getRow() == endX && knight.getCol() == endY){
+            lvlCounter++;
             doneWithLevel = true;
             if(lvlCounter == NUM_OF_LEVELS)
                 youWon.setVisible(true);
-            else {
-                lvlCounter++;
+            else{
                 nextLevel.setVisible(true);
             }
         }

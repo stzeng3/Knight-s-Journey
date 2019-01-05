@@ -131,7 +131,6 @@ public class BoardUtilities {
         for(int i = 0; i < length; i++){
             for(int j = 0; j < width; j++){
                 if(rects[i][j].contains(touchX, touchY)) {
-                    System.out.println(i + ", " + j);
                     return new int[]{i, j};
                 }
             }

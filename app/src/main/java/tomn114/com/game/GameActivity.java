@@ -1,6 +1,7 @@
 package tomn114.com.game;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -22,4 +23,5 @@ public class GameActivity extends Activity {
 
         setContentView(new GamePanel(this));
     }
+
 }

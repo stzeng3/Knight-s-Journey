@@ -23,12 +23,23 @@ public class MainActivity extends Activity {
     }
 
     public void play(View view){
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, LoadingActivity.class);
         startActivity(intent);
     }
 
     public void instructions(View view){
         Intent intent = new Intent(this, InstructionsActivity.class);
         startActivity(intent);
+    }
+
+    public void onStop(){
+        super.onStop();
+        makeBoard();
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
+
+    public void makeBoard(){
+        BoardMaker bm = new BoardMaker();
     }
 }

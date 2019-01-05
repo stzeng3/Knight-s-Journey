@@ -9,6 +9,7 @@ public class BlinkingText {
     private String text;
     private int x, y; // Top Left
     private Paint paint;
+    private Paint rectPaint;
     private boolean visible;
     private Rect textBounds;
 
@@ -18,11 +19,13 @@ public class BlinkingText {
         this.y = y;
         this.paint = paint;
         visible = false;
+        rectPaint = new Paint();
+        rectPaint.setStyle(Paint.Style.STROKE);
 
-        this.paint.setTextSize(48);
+        this.paint.setTextSize(24);
         Rect bounds = new Rect();
         this.paint.getTextBounds(text, 0, text.length(), bounds);
-        textBounds = new Rect(bounds.left + x , bounds.top + y, bounds.right + x, bounds.bottom + y);
+        textBounds = new Rect(bounds.left + x - 10 , bounds.top + y - 10, bounds.right + x + 10, bounds.bottom + y + 10);
     }
 
     public void update(){
@@ -32,6 +35,7 @@ public class BlinkingText {
     public void draw(Canvas canvas){
         if(!visible) return;
         canvas.drawText(text, x, y, paint);
+        canvas.drawRect(textBounds, rectPaint);
     }
 
     public boolean clicked(int touchX, int touchY){

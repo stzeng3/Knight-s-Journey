@@ -10,6 +10,8 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:scaleType="fitXY"
         android:src="@drawable/bg" />
 
@@ -31,11 +33,14 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
-        android:layout_marginBottom="87dp"
+        android:layout_marginBottom="108dp"
         android:gravity="center"
-        android:text="You are a famed knight trying to rush to save the castles!
-        You can move like a knight in chess: you can move two spaces horizontally or vertically, and one space in the other direction.
-You are not allowed to land on a river block, but you can skip over them.
+        android:text="You are a famed knight trying to rush to save the castles! You
+can move like a knight in chess: you can move two spaces
+horizontally or vertically, and one space in the other direction.
+You are not allowed to land on a river block, but you can skip
+over them. Try to minimize the number of moves and time
+spent as they will both factor into you final score out of 100.
 Have fun!" />
 
     <Button

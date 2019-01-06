@@ -8,7 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class MainActivity extends Activity {
-
+    private boolean isReady = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
     }
 
     public void play(View view){
+        isReady = true;
         Intent intent = new Intent(this, LoadingActivity.class);
         startActivity(intent);
     }
@@ -34,9 +35,11 @@ public class MainActivity extends Activity {
 
     public void onStop(){
         super.onStop();
-        makeBoard();
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
+        if(isReady) {
+            makeBoard();
+            Intent intent = new Intent(this, GameActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void makeBoard(){

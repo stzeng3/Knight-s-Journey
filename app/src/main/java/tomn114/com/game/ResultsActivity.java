@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class ResultsActivity extends Activity {
 
@@ -19,6 +20,25 @@ public class ResultsActivity extends Activity {
         //Fullscreen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_results);
+
+        TextView text2 = (TextView) findViewById(R.id.pMoves);
+        text2.setText("Your Total Moves: "+GamePanel.totalMoves);
+
+        TextView text3 = (TextView) findViewById(R.id.mMoves);
+        text3.setText("Minimum Moves: "+GamePanel.minTotal);
+
+        TextView text4 = (TextView) findViewById(R.id.pTime);
+        text4.setText("Your Total Time: "+GamePanel.totalTime);
+
+        TextView text5 = (TextView) findViewById(R.id.mTime);
+        int time = 2*GamePanel.minTotal;
+        text5.setText("Expected Moves: "+time);
+
+        TextView text6 = (TextView) findViewById(R.id.Score);
+        int score = 100 - (GamePanel.totalMoves-GamePanel.minTotal);
+        if(GamePanel.totalTime-time>0)
+            score -= (GamePanel.totalMoves-time);
+        text6.setText("Final Score: "+score);
     }
 
     public void restart(View view){

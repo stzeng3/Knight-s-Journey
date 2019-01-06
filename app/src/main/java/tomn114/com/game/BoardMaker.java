@@ -17,13 +17,12 @@ public class BoardMaker {
     private int endX, endY;
     private int totalMinMoves;
     private int currX, currY;
-    public static final int NUM_OF_LEVELS = 8;
 
 
     public BoardMaker(){
-        allBoards = new boolean[NUM_OF_LEVELS][boardLength][boardWidth];
+        allBoards = new boolean[GamePanel.NUM_OF_LEVELS][boardLength][boardWidth];
 
-        for(int i = 0;i<NUM_OF_LEVELS;i++){
+        for(int i = 0;i<GamePanel.NUM_OF_LEVELS;i++){
             makeIt();
         }
     }
@@ -31,7 +30,6 @@ public class BoardMaker {
     //Creates the board by calling makeBoard
     public void makeIt(){
         runCounter++;
-        //Generates random start and end points
         startX = 0;
         startY = 0;
         endX = 4;

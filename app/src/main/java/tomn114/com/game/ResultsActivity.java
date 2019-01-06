@@ -32,7 +32,7 @@ public class ResultsActivity extends Activity {
 
         TextView text5 = (TextView) findViewById(R.id.mTime);
         int time = 2*GamePanel.minTotal;
-        text5.setText("Expected Moves: "+time);
+        text5.setText("Expected Time: "+time);
 
         TextView text6 = (TextView) findViewById(R.id.Score);
         int score = 100 - (GamePanel.totalMoves-GamePanel.minTotal);

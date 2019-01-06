@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class BlinkingText {
+public class ClickableText {
 
     private String text;
     private int x, y; // Top Left
@@ -13,7 +13,7 @@ public class BlinkingText {
     private boolean visible;
     private Rect textBounds;
 
-    public BlinkingText(String text, int x, int y, Paint paint){
+    public ClickableText(String text, int x, int y, Paint paint){
         this.text = text;
         this.x = x;
         this.y = y;
@@ -22,14 +22,14 @@ public class BlinkingText {
         rectPaint = new Paint();
         rectPaint.setStyle(Paint.Style.STROKE);
 
-        this.paint.setTextSize(24);
+        this.paint.setTextSize(36);
         Rect bounds = new Rect();
         this.paint.getTextBounds(text, 0, text.length(), bounds);
         textBounds = new Rect(bounds.left + x - 10 , bounds.top + y - 10, bounds.right + x + 10, bounds.bottom + y + 10);
     }
 
     public void update(){
-        //Todo: add blinking animation
+        //Todo: add blinking animation if needed
     }
 
     public void draw(Canvas canvas){

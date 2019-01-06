@@ -1,5 +1,8 @@
 package tomn114.com.game;
 
+import android.app.Activity;
+import android.widget.TextView;
+
 public class BoardMaker {
 
     public static boolean[][][] allBoards;
@@ -15,6 +18,7 @@ public class BoardMaker {
     private int totalMinMoves;
     private int currX, currY;
     public static final int NUM_OF_LEVELS = 8;
+
 
     public BoardMaker(){
         allBoards = new boolean[NUM_OF_LEVELS][boardLength][boardWidth];

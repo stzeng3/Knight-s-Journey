@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class LoadingActivity extends Activity {
 
@@ -19,11 +20,5 @@ public class LoadingActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_loading);
-    }
-    protected void onResume(){
-        super.onResume();
-        /*
-
-        */
     }
 }

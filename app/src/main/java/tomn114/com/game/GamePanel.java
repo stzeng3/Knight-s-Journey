@@ -117,8 +117,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                     System.out.println("Clicked river");
                 }
                 else if (board[rowColClicked[0]][rowColClicked[1]]) {
-                    knight.move(rowColClicked[0], rowColClicked[1]);
-                    levelMoves[lvlCounter]++;
+                    knight.move(rowColClicked[0], rowColClicked[1],lvlCounter);
                     checkWin();
                 }
             }
@@ -205,12 +204,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         knight.setRow(0);
         knight.setCol(0);
         s.startTimer();
-    }
-
-    public String prepareResults(){
-        String results = "";
-        results += "Your total moves =";
-        return results;
     }
 
     public void update(){

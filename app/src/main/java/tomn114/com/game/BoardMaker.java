@@ -15,8 +15,6 @@ public class BoardMaker {
     private int boardWidth = 5;
     private int startX, startY;
     private int endX, endY;
-    private int totalMinMoves;
-    private int currX, currY;
 
 
     public BoardMaker(){
@@ -63,7 +61,7 @@ public class BoardMaker {
             barrierNum = 15;
             difficulty++;
             counter++;
-            totalMinMoves+=minMoves;
+            GamePanel.minTotal+=minMoves;
         }
     }
 }

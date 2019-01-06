@@ -38,6 +38,8 @@ public class ResultsActivity extends Activity {
         int score = 100 - (GamePanel.totalMoves-GamePanel.minTotal);
         if(GamePanel.totalTime-time>0)
             score -= (GamePanel.totalMoves-time);
+        if(score<0)
+            score = 0;
         text6.setText("Final Score: "+score);
     }
 

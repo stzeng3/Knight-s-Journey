@@ -23,10 +23,11 @@ public class Knight {
         //Animation
     }
 
-    public void move(int newRow, int newCol){
+    public void move(int newRow, int newCol, int lvlCounter){
         if(valid(newRow, newCol)){
             row = newRow;
             col = newCol;
+            GamePanel.levelMoves[lvlCounter]++;
         }
     }
 

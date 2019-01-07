@@ -37,13 +37,16 @@ public class ResultsActivity extends Activity {
         TextView text6 = (TextView) findViewById(R.id.Score);
         int score = 100 - (GamePanel.totalMoves-GamePanel.minTotal);
         if(GamePanel.totalTime-time>0)
-            score -= (GamePanel.totalMoves-time);
+            score -= (GamePanel.totalTime-time);
         if(score<0)
             score = 0;
         text6.setText("Final Score: "+score);
     }
 
     public void restart(View view){
+        GamePanel.totalTime = 0;
+        GamePanel.totalMoves = 0;
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

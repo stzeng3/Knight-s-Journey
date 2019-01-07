@@ -4,19 +4,27 @@ import android.os.Handler;
 
 public class Stopwatch implements Runnable{
 
-    private long startTime = 0;
+    private long startTime;
+    private long millis;
     private int minutes;
     private int seconds;
+    private long timeAddition;
     private String timeStr;
     private Handler timerHandler;
+    private double hey = Math.random() * 100;
 
-    public Stopwatch(){
+    public Stopwatch(long timeAddition){
         timerHandler = new Handler();
+        this.timeAddition = timeAddition;
     }
 
     @Override
     public void run() {
-        long millis = System.currentTimeMillis() - startTime;
+        //System.out.println("running " + hey);
+        millis = System.currentTimeMillis() - startTime;
+        if(timeAddition > 0) {
+            millis += timeAddition;
+        }
         seconds = (int) (millis/1000);
         minutes = seconds / 60;
         seconds = seconds % 60;
@@ -28,7 +36,8 @@ public class Stopwatch implements Runnable{
     }
 
     public void startTimer(){
-        startTime = System.currentTimeMillis();
+        if(startTime == 0)
+            startTime = System.currentTimeMillis();
         timerHandler.postDelayed(this, 0);
     }
 
@@ -37,15 +46,14 @@ public class Stopwatch implements Runnable{
     }
 
     public void resetTimer(){
+        startTime = 0;
         minutes = 0;
         seconds = 0;
     }
 
-    public int getSeconds(){
-        return seconds;
-    }
-    public int getMinutes(){
-        return minutes;
-    }
+    public long getMillis(){ return millis; }
+    public int getSeconds(){ return seconds; }
+    public int getMinutes(){ return minutes; }
     public String getTimeStr(){ return timeStr; }
+    public long getStartTime(){ return startTime; }
 }

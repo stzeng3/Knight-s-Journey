@@ -1,17 +1,21 @@
 package tomn114.com.game;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.widget.Toast;
 
 public class Knight {
 
     private int row, col;
     private Bitmap knightImg;
+    private Context context;
 
-    public Knight(int row, int col, Bitmap knightImg){
+    public Knight(int row, int col, Bitmap knightImg, Context context){
         this.row  = row;
         this.col = col;
         this.knightImg = knightImg;
+        this.context = context;
     }
 
     public int getRow(){ return row; }
@@ -29,6 +33,8 @@ public class Knight {
             col = newCol;
             GamePanel.levelMoves[lvlCounter]++;
         }
+        else
+            Toast.makeText(context, "Invalid move!", Toast.LENGTH_SHORT).show();
     }
 
     public boolean valid(int newRow, int newCol){

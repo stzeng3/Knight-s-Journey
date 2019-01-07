@@ -2,6 +2,7 @@ package tomn114.com.game;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 public class GameActivity extends Activity {
+    GamePanel gp;
+    long millisWhenPaused;
+    long startTime;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +25,16 @@ public class GameActivity extends Activity {
         //Fullscreen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(new GamePanel(this));
+        setContentView(gp = new GamePanel(this));
+    }
+    protected void onStop(){
+        super.onStop();
+        //User exits
+    }
+
+    protected void onStart(){
+        super.onStart();
+        //User goes back
     }
 
 }

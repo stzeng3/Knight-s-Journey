@@ -10,10 +10,16 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public static final int NUM_OF_LEVELS = 2;
+    public static final int DEFAULT_WIDTH = 1080;
+    public static final int DEFAULT_HEIGHT = 1920;
+
+    public static final int DEFAULT_TEXT_SIZE = 80;
+
     public static int tileSize;
     public static int boardOffset;
     public static int totalTime = 0, totalMoves = 0, minTotal = 0;
@@ -23,6 +29,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private boolean[][] board;
     private boolean[][][] allBoards;
 
+    private long millisWhenPaused = 0;
     private int lvlCounter=0;
     private int displayC=0;
     private int startX = 0, startY = 0;
@@ -47,6 +54,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     }
 
+    public Stopwatch getStopwatch(){
+        return s;
+    }
+    public void deleteStopwatch(){
+        s = null;
+    }
+    public void setMillisWhenPaused(long millisWhenPaused){
+        this.millisWhenPaused = millisWhenPaused;
+    }
+
+    public int getPhoneWidth(){ return getWidth(); }
+    public int getPhoneHeight(){ return getHeight(); }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         tileSize = getWidth()/boardWidth;
@@ -64,17 +84,19 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         tile = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tile), tileSize, tileSize, false);
         river = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.river2), tileSize, tileSize, false);
         castle = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.castle), tileSize, tileSize, false);
-        nextLevel = new ClickableText("Next Level", getWidth() * 4 / 6, getHeight() - boardOffset/2, black);
-        youWon = new ClickableText("Go to Results", getWidth() * 4 / 6 , getHeight() - boardOffset/2, black);
+        nextLevel = new ClickableText(this,"Next Level", getWidth() * 9 / 16, getHeight() - boardOffset/2, black);
+        youWon = new ClickableText(this, "Results", getWidth() * 9 / 16 , getHeight() - boardOffset/2, black);
 
         allBoards = BoardMaker.allBoards;
         board = allBoards[lvlCounter];
         levelTimes = new int[NUM_OF_LEVELS];
         levelMoves = new int[NUM_OF_LEVELS];
 
-        knight = new Knight(startX, startY, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.right), tileSize, tileSize, false));
-        s = new Stopwatch();
+        knight = new Knight(startX, startY, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.right), tileSize, tileSize, false), getContext());
+
+        s = new Stopwatch(millisWhenPaused);
         s.startTimer();
+
         thread = new MainThread(getHolder(), this);
         thread.setRunning(true);
         thread.start();
@@ -110,11 +132,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             if(!doneWithLevel) {
                 int[] rowColClicked = BoardUtilities.whichTileClicked(x, y);
 
-                if (rowColClicked == null) {
-                    System.out.println("Clicked outside board");
+                if(rowColClicked == null) {
+                    //Clicked outside board
                 }
                 else if (board[rowColClicked[0]][rowColClicked[1]] == false) {
-                    System.out.println("Clicked river");
+                    Toast.makeText(getContext(), "You can't go to a river!", Toast.LENGTH_SHORT
+                    ).show();
                 }
                 else if (board[rowColClicked[0]][rowColClicked[1]]) {
                     knight.move(rowColClicked[0], rowColClicked[1],lvlCounter);
@@ -150,9 +173,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         if(canvas != null) {
             //Draw stuff here
             canvas.drawRect(0, 0, getWidth(), getHeight(), white);
-            canvas.drawText("Level: " + (displayC+1), getWidth()*1/6, getHeight() - boardOffset/2, black);
-            canvas.drawText("Moves: " + (levelMoves[displayC]), getWidth()*1/6, boardOffset/2, black);
-            canvas.drawText("Time: " + s.getTimeStr(), getWidth()*4/6, boardOffset/2, black);
+            canvas.drawText("Level: " + (displayC+1), getWidth()/8, getHeight() - boardOffset/2, black);
+            canvas.drawText("Moves: " + (levelMoves[displayC]), getWidth()/8, boardOffset/2, black);
+            canvas.drawText("Time: " + s.getTimeStr(), (getWidth()*9)/16, boardOffset/2, black);
             drawBoard(canvas);
             knight.draw(canvas);
             nextLevel.draw(canvas);

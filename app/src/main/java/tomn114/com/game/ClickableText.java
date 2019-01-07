@@ -24,7 +24,7 @@ public class ClickableText {
         rectPaint = new Paint();
         rectPaint.setStyle(Paint.Style.STROKE);
 
-        this.paint.setTextSize(GamePanel.DEFAULT_TEXT_SIZE / ((GamePanel.DEFAULT_HEIGHT+GamePanel.DEFAULT_WIDTH) / (gp.getPhoneHeight() + gp.getPhoneWidth()) ));
+        this.paint.setTextSize((gp.getPhoneHeight() * gp.getPhoneWidth())/25920);
         Rect bounds = new Rect();
         this.paint.getTextBounds(text, 0, text.length(), bounds);
         textBounds = new Rect(bounds.left + x - 10 , bounds.top + y - 10, bounds.right + x + 10, bounds.bottom + y + 10);

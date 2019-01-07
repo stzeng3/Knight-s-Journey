@@ -35,7 +35,9 @@ public class ResultsActivity extends Activity {
         text5.setText("Expected Time: "+time);
 
         TextView text6 = (TextView) findViewById(R.id.Score);
-        int score = 100 - (GamePanel.totalMoves-GamePanel.minTotal);
+        int score=0;
+        if(GamePanel.totalMoves > GamePanel.minTotal);
+            score = 100 - (GamePanel.totalMoves-GamePanel.minTotal);
         if(GamePanel.totalTime-time>0)
             score -= (GamePanel.totalTime-time);
         if(score<0)

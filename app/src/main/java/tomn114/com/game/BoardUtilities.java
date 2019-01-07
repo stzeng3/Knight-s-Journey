@@ -13,6 +13,7 @@ public class BoardUtilities {
     static int length;
     static int width;
     static int temp;
+    static int min;
     static int solutions;
 
     //Coordinator will pass in a potential board, will check if the (endX,endY) can be reached
@@ -26,17 +27,17 @@ public class BoardUtilities {
 
         solutions = 0;
         visited = new boolean[length][width];
-        GamePanel.minTotal = length * width;
+        min = length * width;
         findPossible(startX, startY);
-        return GamePanel.minTotal;
+        return min;
     }
 
     //Checks if board is playable(player can reach the end point) using floodfill recursion. Also finds the minimum number of moves.
     public static void findPossible(int x, int y){
         //if the end position is reached, then update minRequiredMoves
         if(x == endX && y == endY){
-            if(temp<=GamePanel.minTotal){
-                GamePanel.minTotal = temp;
+            if(temp<=min){
+                min = temp;
                 solutions++;
             }
             return;

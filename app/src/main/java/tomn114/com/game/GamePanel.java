@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
-    public static final int NUM_OF_LEVELS = 2;
+    public static final int NUM_OF_LEVELS = 1;
     public static final int DEFAULT_WIDTH = 1080;
     public static final int DEFAULT_HEIGHT = 1920;
 
@@ -50,6 +50,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         //Intercept Events
         getHolder().addCallback(this);
         //Focusable to handle events
+
+        levelTimes = new int[NUM_OF_LEVELS];
+
+        allBoards = BoardMaker.allBoards;
+        board = allBoards[lvlCounter];
+
         setFocusable(true);
 
     }
@@ -69,6 +75,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+
         tileSize = getWidth()/boardWidth;
         boardOffset = (getHeight() - tileSize*boardLength) / 2;
 
@@ -78,8 +85,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         black = new Paint();
         black.setColor(Color.BLACK);
 
-        board = new boolean[boardLength][boardWidth];
-
         BoardUtilities.createRects(boardLength, boardWidth);
         tile = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.tile), tileSize, tileSize, false);
         river = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.river2), tileSize, tileSize, false);
@@ -87,9 +92,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         nextLevel = new ClickableText(this,"Next Level", getWidth() * 9 / 16, getHeight() - boardOffset/2, black);
         youWon = new ClickableText(this, "Results", getWidth() * 9 / 16 , getHeight() - boardOffset/2, black);
 
-        allBoards = BoardMaker.allBoards;
-        board = allBoards[lvlCounter];
-        levelTimes = new int[NUM_OF_LEVELS];
         levelMoves = new int[NUM_OF_LEVELS];
 
         knight = new Knight(startX, startY, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.right), tileSize, tileSize, false), getContext());
@@ -150,7 +152,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
                     //Test
                     for(int i = 0; i<NUM_OF_LEVELS; i++){
                         totalTime += levelTimes[i];
-                        totalMoves += levelMoves[i];
                     }
                     Intent intent = new Intent();
                     intent.setClass(this.getContext(), ResultsActivity.class);
@@ -206,6 +207,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public void checkWin(){
         if(knight.getRow() == endX && knight.getCol() == endY){
+            totalMoves += levelMoves[lvlCounter];
             levelTimes[lvlCounter] = s.getMinutes()*60 + s.getSeconds();
             doneWithLevel = true;
             s.stopTimer();

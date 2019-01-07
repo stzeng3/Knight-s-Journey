@@ -20,13 +20,12 @@ public class BoardMaker {
     public BoardMaker(){
         allBoards = new boolean[GamePanel.NUM_OF_LEVELS][boardLength][boardWidth];
 
-        startX = 0;
-        startY = 0;
-        endX = 4;
-        endY = 4;
-
         for(int i = 0;i<GamePanel.NUM_OF_LEVELS;i++){
             makeIt();
+            GamePanel.storeSX[i]=startX;
+            GamePanel.storeSY[i]=startY;
+            GamePanel.storeEX[i]=endX;
+            GamePanel.storeEY[i]=endY;
             GamePanel.minTotal+=minMoves;
         }
     }
@@ -36,6 +35,12 @@ public class BoardMaker {
         runCounter++;
         barrierCounter = barrierNum;
         //generates random barriers
+
+        startX = (int)(Math.random()*2)+boardWidth-2;
+        startY = (int)(Math.random()*2);
+        endX = (int)(Math.random()*2);
+        endY = (int)(Math.random()*2)+boardLength-2;
+
         for(int i=0; i < boardLength; i++){
             for(int j=0; j < boardWidth; j++){
                 temp = (int)(Math.random()*3);

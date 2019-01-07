@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
-    public static final int NUM_OF_LEVELS = 1;
+    public static final int NUM_OF_LEVELS = 7;
     public static final int DEFAULT_WIDTH = 1080;
     public static final int DEFAULT_HEIGHT = 1920;
 
@@ -24,6 +24,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     public static int boardOffset;
     public static int totalTime = 0, totalMoves = 0, minTotal = 0;
     public static int[] levelTimes, levelMoves;
+    public static int[] storeSX = new int[NUM_OF_LEVELS*2];
+    public static int[] storeSY = new int[NUM_OF_LEVELS*2];
+    public static int[] storeEX = new int[NUM_OF_LEVELS*2];
+    public static int[] storeEY = new int[NUM_OF_LEVELS*2];
 
     private MainThread thread;
     private boolean[][] board;
@@ -32,8 +36,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private long millisWhenPaused = 0;
     private int lvlCounter=0;
     private int displayC=0;
-    private int startX = 0, startY = 0;
-    private int endX = 4, endY = 4;
+    private int startX, startY, endX, endY;
     private int boardLength = 5;
     private int boardWidth = 5;
     private Knight knight;
@@ -52,12 +55,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         //Focusable to handle events
 
         levelTimes = new int[NUM_OF_LEVELS];
-
         allBoards = BoardMaker.allBoards;
         board = allBoards[lvlCounter];
 
         setFocusable(true);
-
     }
 
     public Stopwatch getStopwatch(){
@@ -75,6 +76,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        startX = storeSX[lvlCounter];
+        startY = storeSY[lvlCounter];
+        endX = storeEX[lvlCounter];
+        endY = storeEY[lvlCounter];
 
         tileSize = getWidth()/boardWidth;
         boardOffset = (getHeight() - tileSize*boardLength) / 2;
@@ -223,11 +228,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public void resetLevel() {
         displayC++;
+        startX = storeSX[lvlCounter];
+        startY = storeSY[lvlCounter];
+        endX = storeEX[lvlCounter];
+        endY = storeEY[lvlCounter];
         board = allBoards[lvlCounter];
         nextLevel.setVisible(false);
         doneWithLevel = false;
-        knight.setRow(0);
-        knight.setCol(0);
+        knight.setRow(startX);
+        knight.setCol(startY);
         s.startTimer();
     }
 

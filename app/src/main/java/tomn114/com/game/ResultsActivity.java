@@ -43,6 +43,7 @@ public class ResultsActivity extends Activity {
         if(score<0)
             score = 0;
         text6.setText("Final Score: "+score);
+        GamePanel.minTotal=0;
     }
 
     public void restart(View view){

@@ -8,23 +8,18 @@ public class Stopwatch implements Runnable{
     private long millis;
     private int minutes;
     private int seconds;
-    private long timeAddition;
     private String timeStr;
     private Handler timerHandler;
-    private double hey = Math.random() * 100;
+    //private double test = Math.random() * 100;
 
-    public Stopwatch(long timeAddition){
+    public Stopwatch(){
         timerHandler = new Handler();
-        this.timeAddition = timeAddition;
     }
 
     @Override
     public void run() {
-        //System.out.println("running " + hey);
+        //System.out.println("running " + test);
         millis = System.currentTimeMillis() - startTime;
-        if(timeAddition > 0) {
-            millis += timeAddition;
-        }
         seconds = (int) (millis/1000);
         minutes = seconds / 60;
         seconds = seconds % 60;

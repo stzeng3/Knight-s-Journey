@@ -33,7 +33,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private boolean[][] board;
     private boolean[][][] allBoards;
 
-    private long millisWhenPaused = 0;
     private int lvlCounter=0;
     private int displayC=0;
     private int startX, startY, endX, endY;
@@ -60,17 +59,14 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         setFocusable(true);
     }
-
+    /*
     public Stopwatch getStopwatch(){
         return s;
     }
     public void deleteStopwatch(){
         s = null;
     }
-    public void setMillisWhenPaused(long millisWhenPaused){
-        this.millisWhenPaused = millisWhenPaused;
-    }
-
+    */
     public int getPhoneWidth(){ return getWidth(); }
     public int getPhoneHeight(){ return getHeight(); }
 
@@ -101,7 +97,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
         knight = new Knight(startX, startY, Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.right), tileSize, tileSize, false), getContext());
 
-        s = new Stopwatch(millisWhenPaused);
+        s = new Stopwatch();
         s.startTimer();
 
         thread = new MainThread(getHolder(), this);
@@ -241,6 +237,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     }
 
     public void update(){
-
+        //Future animations go here
     }
 }

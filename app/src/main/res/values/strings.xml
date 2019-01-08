@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Game</string>
+    <string name="app_name">Knight\'s Journey</string>
     <string name="title_activity_loading">LoadingActivity</string>
 </resources>

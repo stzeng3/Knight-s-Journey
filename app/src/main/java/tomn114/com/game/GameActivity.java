@@ -14,11 +14,12 @@ import android.widget.TextView;
 
 public class GameActivity extends Activity {
     GamePanel gp;
-    long millisWhenPaused;
-    long startTime;
+    boolean wasStopped;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        wasStopped = false;
 
         //Turns title off
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -29,12 +30,21 @@ public class GameActivity extends Activity {
     }
     protected void onStop(){
         super.onStop();
+        wasStopped = true;
         //User exits
     }
 
     protected void onStart(){
         super.onStart();
         //User goes back
+    }
+
+    protected void onResume(){
+        super.onResume();
+        if(wasStopped){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 }

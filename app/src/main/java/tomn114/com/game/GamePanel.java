@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
-    public static final int NUM_OF_LEVELS = 7;
+    public static final int NUM_OF_LEVELS = 3;
     public static final int DEFAULT_WIDTH = 1080;
     public static final int DEFAULT_HEIGHT = 1920;
 

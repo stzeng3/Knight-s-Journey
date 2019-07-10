@@ -1,6 +1,7 @@
 package tomn114.com.game;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.TextView;
 
 public class BoardMaker {
@@ -19,6 +20,7 @@ public class BoardMaker {
 
     public BoardMaker(){
         allBoards = new boolean[GamePanel.NUM_OF_LEVELS][boardLength][boardWidth];
+        GamePanel.minTotal = 0;
 
         for(int i = 0;i<GamePanel.NUM_OF_LEVELS;i++){
             makeIt();
@@ -32,6 +34,7 @@ public class BoardMaker {
 
     //Creates the board by calling makeBoard
     public void makeIt(){
+        //Log.d("BoardMaker", "Making it");
         runCounter++;
         barrierCounter = barrierNum;
         //generates random barriers
@@ -63,7 +66,7 @@ public class BoardMaker {
         minMoves = BoardUtilities.checkBoard(allBoards[counter],startX, startY, endX, endY, boardLength, boardWidth);
 
         //If the board is not possible to complete it will re-call the method
-        if(minMoves==boardLength*boardWidth || minMoves<=difficulty)makeIt();
+        if(minMoves==boardLength*boardWidth || minMoves<=difficulty) makeIt();
         else{
             barrierNum = 15;
             difficulty++;

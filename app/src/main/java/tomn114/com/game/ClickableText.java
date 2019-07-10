@@ -48,4 +48,5 @@ public class ClickableText {
     }
 
     public void setVisible(boolean b){ visible = b; }
+    public boolean getVisible(){ return visible; }
 }

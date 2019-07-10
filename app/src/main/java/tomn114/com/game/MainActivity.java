@@ -39,6 +39,7 @@ public class MainActivity extends Activity {
             makeBoard();
             Intent intent = new Intent(this, GameActivity.class);
             startActivity(intent);
+            isReady = false;
         }
     }
 

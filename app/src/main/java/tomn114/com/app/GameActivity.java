@@ -1,17 +1,10 @@
-package tomn114.com.game;
+package tomn114.com.app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.TextureView;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 public class GameActivity extends Activity {
     GamePanel gp;

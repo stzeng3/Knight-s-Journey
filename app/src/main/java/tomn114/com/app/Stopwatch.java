@@ -1,8 +1,6 @@
-package tomn114.com.game;
+package tomn114.com.app;
 
 import android.os.Handler;
-import android.os.SystemClock;
-import android.util.Log;
 
 public class Stopwatch implements Runnable{
 

@@ -1,4 +1,4 @@
-package tomn114.com.game;
+package tomn114.com.app;
 
 /* Yoinked from the original Knight's Journey source and changed to a static utility class */
 

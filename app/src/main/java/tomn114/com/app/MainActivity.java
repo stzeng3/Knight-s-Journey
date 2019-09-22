@@ -1,4 +1,4 @@
-package tomn114.com.game;
+package tomn114.com.app;
 
 import android.app.Activity;
 import android.content.Intent;

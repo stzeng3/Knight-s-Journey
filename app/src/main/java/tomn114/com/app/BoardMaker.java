@@ -1,8 +1,4 @@
-package tomn114.com.game;
-
-import android.app.Activity;
-import android.util.Log;
-import android.widget.TextView;
+package tomn114.com.app;
 
 import java.util.ArrayList;
 

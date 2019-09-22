@@ -1,6 +1,7 @@
 package tomn114.com.game;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,11 +17,10 @@ import android.widget.Toast;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
-    public static final int NUM_OF_LEVELS = 7;
-    public static final int DEFAULT_WIDTH = 1080;
-    public static final int DEFAULT_HEIGHT = 1920;
-
-    public static final int DEFAULT_TEXT_SIZE = 80;
+    public static int NUM_OF_LEVELS = 7;
+    //public static final int DEFAULT_WIDTH = 1080;
+    //public static final int DEFAULT_HEIGHT = 1920;
+    //public static final int DEFAULT_TEXT_SIZE = 80;
 
     public static int tileSize;
     public static int boardOffset;
@@ -54,6 +54,24 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     private int loadedKnightX = -1, loadedKnightY = -1;
     private int[] loadedMoves = null;
 
+    /* TUTORIAL: private boolean tutorial; */
+    private Context c;
+
+    /* TUTORIAL:
+    private enum TutorialStates{
+        START,
+        WELCOME,
+        KNIGHT,
+        RIVERS,
+        CASTLE,
+        MOVES,
+        TIME,
+        TRYIT;
+    }
+
+    TutorialStates ts;
+    */
+
     public GamePanel(Context context){
         super(context);
         //Intercept Events
@@ -64,6 +82,28 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         levelTimes = new int[NUM_OF_LEVELS];
         allBoards = BoardMaker.allBoards;
         board = allBoards[lvlCounter];
+        /* TUTORIAL: tutorial = false; */
+
+        setFocusable(true);
+    }
+
+    //Used for the tutorial level
+    public GamePanel(Context context, int levels){
+        super(context);
+        c = context;
+        NUM_OF_LEVELS = levels;
+
+        getHolder().addCallback(this);
+        getHolder().setFixedSize(getWidth(), getHeight());
+
+        levelTimes = new int[NUM_OF_LEVELS];
+        allBoards = BoardMaker.allBoards;
+        board = allBoards[lvlCounter];
+
+        /* TUTORIAL:
+        tutorial = true;
+        ts = TutorialStates.START;
+        */
 
         setFocusable(true);
     }
@@ -71,17 +111,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
     public Stopwatch getStopwatch(){
         return s;
     }
-    /*
-    public void deleteStopwatch(){
-        s = null;
-    }
-    */
+
     public int getPhoneWidth(){ return getWidth(); }
     public int getPhoneHeight(){ return getHeight(); }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        //Log.d("GamePanel", "Surface Created, Min total: " + minTotal);
+
         startX = storeSX[lvlCounter];
         startY = storeSY[lvlCounter];
         endX = storeEX[lvlCounter];
@@ -102,8 +138,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         castle = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.castle), tileSize, tileSize, false);
         nextLevel = new ClickableText(this,"Next Level", getWidth() * 9 / 16, getHeight() - boardOffset/2, black);
         youWon = new ClickableText(this, "Results", getWidth() * 9 / 16 , getHeight() - boardOffset/2, black);
-        resumeGame = new ClickableText(this, "Resume", getWidth() / 2, 100, black);
-        exitToMenu = new ClickableText(this, "Exit to main menu", getWidth() / 2, 360, black);
+        resumeGame = new ClickableText(this, "Resume", getWidth() * 1/4, getHeight() * 9/16, black);
+        exitToMenu = new ClickableText(this, "Exit to main menu", getWidth() * 2/3, getHeight() * 9/16, black);
         tempPause = new ClickableText(this, "||", getWidth() * 13/16, boardOffset/2, black);
 
         if(paused){
@@ -174,7 +210,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
             }
             else {
                 if (!doneWithLevel) {
+
                     int[] rowColClicked = BoardUtilities.whichTileClicked(x, y);
+
 
                     if (rowColClicked == null) {
                         //Clicked outside board
@@ -233,10 +271,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
         }
         if(paused){
             canvas.drawRect(0, 0, getWidth(), getHeight(), white);
-            canvas.drawText("PAUSED", 300, 500, black);
+            canvas.drawText("PAUSED", getWidth()/2, getHeight()*1/4, black);
             resumeGame.draw(canvas);
             exitToMenu.draw(canvas);
         }
+
+        /* TUTORIAL:
+        if(ts == TutorialStates.START){
+            ts = TutorialStates.WELCOME;
+            System.out.println(ts.toString());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(c);
+            builder.setMessage("welcome to knight's journey").setTitle("welcome");
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        */
     }
 
     public void drawBoard(Canvas canvas){
@@ -293,6 +343,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback{
 
     public void update(){
         //Future animations go here
+
     }
 
     public void pause(){

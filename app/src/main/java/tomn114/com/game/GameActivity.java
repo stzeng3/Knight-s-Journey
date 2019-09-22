@@ -20,18 +20,32 @@ public class GameActivity extends Activity {
     int savedKnightX;
     int savedKnightY;
     int[] savedMoves;
+    /* TUTORIAL: boolean tutorial; */
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         wasStopped = false;
 
+        Intent intent = getIntent();
+        //tutorial = intent.getBooleanExtra("TUTORIAL_BOOLEAN", tutorial);
+
         //Turns title off
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //Fullscreen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        /* TUTORIAL
+        if(tutorial){
+            setContentView(gp = new GamePanel(this, 1));
+        }
+        else {
+            setContentView(gp = new GamePanel(this));
+        }
+        */
+
         setContentView(gp = new GamePanel(this));
+
     }
     protected void onStop(){
         //gp.pause();

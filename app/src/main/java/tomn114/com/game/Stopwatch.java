@@ -23,7 +23,7 @@ public class Stopwatch implements Runnable{
 
     @Override
     public void run() {
-        Log.d(Stopwatch.class.getSimpleName(), "Pause time: " + pauseTime + " , Milliselapsed: " + millisElapsed + ", Millis: " + millis);
+        //Log.d(Stopwatch.class.getSimpleName(), "Pause time: " + pauseTime + " , Milliselapsed: " + millisElapsed + ", Millis: " + millis);
         millisElapsed = System.currentTimeMillis() - startTime;
         millis = pauseTime + millisElapsed;
         seconds = (int) (millis/1000);

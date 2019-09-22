@@ -128,6 +128,7 @@ public class BoardUtilities {
     }
 
     public static int[] whichTileClicked(int touchX, int touchY){
+
         for(int i = 0; i < length; i++){
             for(int j = 0; j < width; j++){
                 if(rects[i][j].contains(touchX, touchY)) {

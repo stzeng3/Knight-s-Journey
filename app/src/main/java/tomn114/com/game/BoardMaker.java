@@ -9,6 +9,13 @@ import java.util.ArrayList;
 public class BoardMaker {
 
     public static boolean[][][] allBoards;
+
+    public static final boolean[][] tutorialBoard = { {true, true, true, true, true},
+                                                      {true, true, false, false, true},
+                                                      {true, true, true, true, false},
+                                                      {true, true, true, true, true},
+                                                      {true, true, true, true, true}};
+
     private int[] pathX, pathY, tempXY;
     private ArrayList<int[]> important = new ArrayList<>();
 
@@ -38,9 +45,26 @@ public class BoardMaker {
         }
     }
 
+    //Primarily used to setup the tutorial level
+    public BoardMaker(int levels){
+        allBoards = new boolean[levels][boardLength][boardWidth];
+        allBoards[0] = tutorialBoard;
+
+        int startX = 4;
+        int startY = 0;
+        int endX = 0;
+        int endY = 4;
+
+        GamePanel.storeSX[0] = startX;
+        GamePanel.storeSY[0] = startY;
+        GamePanel.storeEX[0] = endX;
+        GamePanel.storeEY[0] = endY;
+        minMoves = BoardUtilities.checkBoard(allBoards[0], startX, startY, endX, endY, boardLength, boardWidth);
+        GamePanel.minTotal = minMoves;
+    }
+
     //Creates the board by calling makeBoard
     public void makeIt() {
-        //Log.d("BoardMaker", "Making it");
         runCounter++;
         barrierCounter = barrierNum;
 
